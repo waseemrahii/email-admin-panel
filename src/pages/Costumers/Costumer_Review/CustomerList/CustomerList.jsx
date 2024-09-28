@@ -64,7 +64,7 @@ const CustomerList = () => {
                   />
                   <button
                     type="submit"
-                    className="btn px-4 py-2 bg-[#A1CB46] text-white hover:bg-[#7e9f37]"
+                    className="btn px-4 py-2 bg-[#1e1f1d] text-white hover:bg-[#121311]"
                   >
                     Search
                   </button>
@@ -73,9 +73,9 @@ const CustomerList = () => {
             </div>
             <div className="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
               <div className="d-flex justify-content-sm-end">
-                <button
+                {/* <button
                   type="button"
-                  className="btn px-4 py-2 bg-[#A1CB46] text-white hover:bg-[#7e9f37] flex gap-1"
+                  className="btn px-4 py-2 bg-[#272725] text-white hover:bg-[#7e9f37] flex gap-1"
                   style={{
                     display: "flex ",
                     justifyContent: "center",
@@ -84,7 +84,7 @@ const CustomerList = () => {
                   data-toggle="dropdown"
                 >
                   <FiDownload /> Export
-                </button>
+                </button> */}
                 <ul className="dropdown-menu dropdown-menu-right">
                   <li>
                     <a

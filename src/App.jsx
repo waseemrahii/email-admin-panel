@@ -62,7 +62,7 @@ function App() {
                   )}
                 </button>
                  <AllRoutes />
-                <Footer />
+                {/* <Footer /> */}
               </main>
             </div>
           </>
