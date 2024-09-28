@@ -36,7 +36,7 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        {isLoggedIn ? (
+        {/* {isLoggedIn ? ( */}
           <>
             <Header />
             <div className="row">
@@ -66,12 +66,12 @@ function App() {
               </main>
             </div>
           </>
-        ) : (
+        {/* ) : (
           <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
-        )}
+        )} */}
       </div>
     </Router>
   );
