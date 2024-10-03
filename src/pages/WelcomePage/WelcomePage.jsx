@@ -69,15 +69,15 @@ const Overview = () => {
   return (
     <section className="space-y-6 container p-12">
       {/* Total Emails Sent */}
-      <div className="card bg-base-100 shadow-lg">
+      {/* <div className="card bg-base-100 shadow-lg">
         <div className="card-body">
           <h4 className="card-title text-xl font-bold">Total Emails Sent</h4>
           <p className="text-3xl font-semibold">{totalEmailsSent}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Top Users */}
-      <div className="card bg-base-100 shadow-lg">
+      {/* <div className="card bg-base-100 shadow-lg">
         <div className="card-body">
           <h4 className="card-title text-xl font-bold">Top Users</h4>
           <ul className="space-y-4">
@@ -92,10 +92,10 @@ const Overview = () => {
             ))}
           </ul>
         </div>
-      </div>
+      </div> */}
 
       {/* Campaigns */}
-      <div className="card bg-base-100 shadow-lg">
+      {/* <div className="card bg-base-100 shadow-lg">
         <div className="card-body">
           <h4 className="card-title text-xl font-bold">Campaigns</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -109,7 +109,7 @@ const Overview = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Email Packages */}
       <div className="card bg-base-100 shadow-lg">

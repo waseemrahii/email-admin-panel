@@ -244,6 +244,13 @@ const Sidebar = ({ setComponent }) => {
         <MdShoppingBag className="inline-block mr-2" /> BulK Email
       </Link>
       <Link
+        to="/sendemail"
+        className="block w-full text-left p-2 rounded hover:bg-[#3d443f] text-white hover:text-white mb-3 "
+        style={{ color: "white" }}
+      >
+        <MdShoppingBag className="inline-block mr-2" /> Send Email
+      </Link>
+      <Link
         to="/template"
         className="block w-full text-left p-2 rounded hover:bg-[#3d443f] text-white hover:text-white mb-3 "
         style={{ color: "white" }}
@@ -256,6 +263,13 @@ const Sidebar = ({ setComponent }) => {
         style={{ color: "white" }}
       >
         <MdShoppingBag className="inline-block mr-2" /> Package Settings
+      </Link>
+      <Link
+        to="/updatesmpt"
+        className="block w-full text-left p-2 rounded hover:bg-[#3d443f] text-white hover:text-white mb-3 "
+        style={{ color: "white" }}
+      >
+        <MdShoppingBag className="inline-block mr-2" /> Add Mail
       </Link>
       <Link
         to="/users"

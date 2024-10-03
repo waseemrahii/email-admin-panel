@@ -1,25 +1,28 @@
-
-// src/redux/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import ApiUrl from '../../../ApiUrl';
 
+// Retrieve token and user data from localStorage
 const token = localStorage.getItem('token');
 const userData = localStorage.getItem('user');
 
+// Initial state for auth
 const initialState = {
   isLoggedIn: !!token,
   user: userData ? JSON.parse(userData) : null,
   error: null,
-  token: token || null, // Add token to state
+  token: token || null,
 };
 
+// Async thunk for login
 export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/vendors/login/', { email, password });
-      const { token, result: user } = response.data.docs;
+      const response = await axios.post(`${ApiUrl}/api/users/signin`, { email, password });
+      const { token, user } = response.data;
 
+      // Store token and user in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -30,6 +33,7 @@ export const login = createAsyncThunk(
   }
 );
 
+// Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -39,7 +43,7 @@ const authSlice = createSlice({
       localStorage.removeItem('user');
       state.isLoggedIn = false;
       state.user = null;
-      state.token = null; // Clear token from state
+      state.token = null;
       state.error = null;
     },
     setAuthToken: (state, action) => {

@@ -1,24 +1,3 @@
-// import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from './auth/authSlice';
-// import productReducer from './product/productSlice'; // Import your product reducer
-// import orderReducer from './orderSlice'; // Import your product reducer
-// import categoryReducer from './categorybrandSlice'; // Import your product reducer
-// import refundReducer from './refundSlice'; // Import your product reducer
-
-// const store = configureStore({
-//   reducer: {
-//     auth: authReducer,
-//     product: productReducer,
-//     vendorOrder: orderReducer,
-//     category: categoryReducer,
-//     refund: refundReducer,
-//   },
-// });
-
-// export default store;
-
-
-
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/authSlice';
 import productReducer from './product/productSlice';
@@ -27,6 +6,9 @@ import categoryReducer from './categorybrandSlice';
 import refundReducer from './refundSlice';
 import vendorReducer from './vendorSlice'; // Import your vendor reducer
 import brandReducer from './brandSlice'; // Import your vendor reducer
+import userReducer from './auth/userSlice'; // Import your vendor reducer
+import packageReducer from './auth/packageSlice'; // Import your vendor reducer
+import templatesReducer from './auth/templateSlice'; // Import your vendor reducer
 
 const store = configureStore({
   reducer: {
@@ -37,6 +19,9 @@ const store = configureStore({
     refund: refundReducer,
     vendor: vendorReducer, // Add your vendor reducer here
     brand: brandReducer, // Add your brand reducer here
+    user: userReducer, // Add the user slice to the store
+    package: packageReducer,
+    templates: templatesReducer,
   },
 });
 

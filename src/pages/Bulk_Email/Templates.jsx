@@ -1,37 +1,67 @@
-
-
-import React, { useState } from 'react';
-import { AiOutlineMail, AiOutlineEdit, AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineMail, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTemplate, updateTemplate, deleteTemplate, getTemplates } from '../../components/redux/auth/templateSlice';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
+import { FaEdit } from 'react-icons/fa';
 
 const Templates = ({ onSelectTemplate }) => {
-  const [templates, setTemplates] = useState([
-    { id: 1, name: 'Welcome Email', subject: 'Welcome to our service!', body: 'Thank you for joining us!' },
-    { id: 2, name: 'Newsletter', subject: 'Our Latest Updates', body: 'Here are the latest updates...' },
-  ]);
+  const dispatch = useDispatch();
+  const templates = useSelector((state) => state.templates.templates); // Access the templates array from the slice
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [newTemplate, setNewTemplate] = useState({ name: '', subject: '', body: '' });
 
-  const handleEdit = (template) => {
-    setEditingTemplate(template);
-    setNewTemplate(template);
-  };
+  useEffect(() => {
+    dispatch(getTemplates()); // Fetch templates when component mounts
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (editingTemplate) {
+      setNewTemplate(editingTemplate);
+    }
+  }, [editingTemplate]);
 
   const handleSave = () => {
-    setTemplates(templates.map(template =>
-      template.id === editingTemplate.id ? newTemplate : template
-    ));
+    if (editingTemplate) {
+      dispatch(updateTemplate({ templateId: editingTemplate.id, templateData: newTemplate }))
+        .then(() => {
+          toast.success('Template updated successfully!'); // Toast notification for update
+        })
+        .catch(() => {
+          toast.error('Failed to update template.'); // Error toast
+        });
+    } else {
+      dispatch(addTemplate(newTemplate))
+        .then(() => {
+          toast.success('Template added successfully!'); // Toast notification for addition
+        })
+        .catch(() => {
+          toast.error('Failed to add template.'); // Error toast
+        });
+    }
     setEditingTemplate(null);
     setNewTemplate({ name: '', subject: '', body: '' });
   };
 
   const handleDelete = (id) => {
-    setTemplates(templates.filter(template => template.id !== id));
+    if (window.confirm('Are you sure you want to delete this template?')) {
+      dispatch(deleteTemplate(id))
+        .then(() => {
+          toast.success('Template deleted successfully!'); // Toast notification for deletion
+        })
+        .catch(() => {
+          toast.error('Failed to delete template.'); // Error toast
+        });
+    }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewTemplate({ ...newTemplate, [name]: value });
   };
+
+  console.log(templates); // Log the templates state
 
   return (
     <section className="space-y-6 container p-10">
@@ -40,37 +70,31 @@ const Templates = ({ onSelectTemplate }) => {
         <h4 className="text-xl font-semibold mb-2">
           {editingTemplate ? 'Edit Template' : 'Add New Template'}
         </h4>
-        <div className="flex items-center mb-2">
-          {/* <AiOutlineFileAdd className="mr-2 text-lg" /> */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Template Name"
-            value={newTemplate.name}
-            onChange={handleChange}
-            className="input input-bordered w-full p-2 border border-gray-300 focus:border-green-400 focus:outline-none"
-          />
-        </div>
-        <div className="flex items-center mb-2">
-          {/* <AiOutlineMail className="mr-2 text-lg" /> */}
-          <input
-            type="text"
-            name="subject"
-            placeholder="Subject"
-            value={newTemplate.subject}
-            onChange={handleChange}
-            className="input input-bordered w-full p-2 border border-gray-300 focus:border-green-400 focus:outline-none"
-          />
-        </div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Template Name"
+          value={newTemplate.name}
+          onChange={handleChange}
+          className="input input-bordered w-full p-2 border border-gray-300 focus:border-green-400 focus:outline-none mb-2"
+        />
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={newTemplate.subject}
+          onChange={handleChange}
+          className="input input-bordered w-full p-2 border border-gray-300 focus:border-gray-400 focus:outline-none mb-2"
+        />
         <textarea
           name="body"
           placeholder="Body"
           value={newTemplate.body}
           onChange={handleChange}
-          className="textarea textarea-bordered w-full p-2 border border-gray-300 focus:border-green-400 focus:outline-none mb-2"
+          className="textarea textarea-bordered w-full p-2 border border-gray-300 focus:border-gray-400 focus:outline-none mb-2"
         />
         <button
-          onClick={editingTemplate ? handleSave : () => setTemplates([...templates, { ...newTemplate, id: Date.now() }])}
+          onClick={handleSave}
           className="btn bg-gray-800 text-white"
         >
           {editingTemplate ? 'Save Changes' : 'Add Template'}
@@ -87,80 +111,44 @@ const Templates = ({ onSelectTemplate }) => {
             </tr>
           </thead>
           <tbody>
-            {templates.map(template => (
-              <tr key={template.id}>
-                <td>{template.name}</td>
-                <td>{template.subject}</td>
-                <td className='flex '>
-                  <button
-                    onClick={() => onSelectTemplate(template)}
-                    className="btn btn-info btn-sm flex items-center"
-                  >
-                    <AiOutlineMail className="mr-1" />
-                  </button>
-                  <button
-                    onClick={() => handleEdit(template)}
-                    className="btn btn-info btn-sm ml-2 flex items-center"
-                  >
-                    <AiOutlineEdit className="mr-1" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(template.id)}
-                    className="btn btn-error btn-sm ml-2 flex items-center"
-                  >
-                    <AiOutlineDelete className="mr-1" /> 
-                  </button>
-                </td>
+            {Array.isArray(templates) && templates.length > 0 ? (
+              templates.map(template => (
+                <tr key={template._id}>
+                  <td>{template.name}</td>
+                  <td>{template.subject}</td>
+                  <td className='flex '>
+                    {/* <button
+                      onClick={() => onSelectTemplate(template)}
+                      className="btn btn-info btn-sm flex items-center"
+                    >
+                      <AiOutlineMail className="mr-1" />
+                    </button> */}
+                    <button
+                      onClick={() => setEditingTemplate(template)}
+                      className="btn btn-info btn-sm ml-2 flex items-center border-gray-700 hover:bg-gray-700 hover:text-white"
+                    >
+                      <FaEdit className="mr-1" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(template._id)}
+                      className="btn btn-info btn-sm ml-2 flex items-center  border-red-700 text-red-500 hover:bg-red-700 hover:text-white"
+                    >
+                      <AiOutlineDelete className="mr-1" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="text-center">No templates available.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+      <ToastContainer /> {/* Toast container for notifications */}
     </section>
   );
 };
 
 export default Templates;
-
-
-
-// import React, { useState } from 'react';
-// import { AiOutlineMail, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
-
-// const Templates = ({ onSelectTemplate }) => {
-//   const [templates, setTemplates] = useState([
-//     { id: 1, name: 'Welcome Email', subject: 'Welcome to our service!', body: 'Thank you for joining us!' },
-//     { id: 2, name: 'Newsletter', subject: 'Our Latest Updates', body: 'Here are the latest updates...' },
-//   ]);
-
-//   const handleDelete = (id) => {
-//     setTemplates(templates.filter(template => template.id !== id));
-//   };
-
-//   return (
-//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//       {templates.map(template => (
-//         <div key={template.id} className="card bg-white shadow-lg p-6 rounded-lg">
-//           <h3 className="text-lg font-semibold mb-2">{template.name}</h3>
-//           <p className="text-gray-600 mb-4">{template.subject}</p>
-//           <div className="flex justify-between items-center">
-//             <button
-//               onClick={() => onSelectTemplate(template)}
-//               className="btn btn-sm bg-blue-500 text-white flex items-center"
-//             >
-//               <AiOutlineMail className="mr-1" /> Use Template
-//             </button>
-//             <button
-//               onClick={() => handleDelete(template.id)}
-//               className="btn btn-sm bg-red-500 text-white flex items-center"
-//             >
-//               <AiOutlineDelete className="mr-1" /> Delete
-//             </button>
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default Templates;
